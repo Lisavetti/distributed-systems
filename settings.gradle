@@ -1,0 +1,5 @@
+rootProject.name = 'distributed-system-design-Liza'
+include 'logging-service'
+include 'messages-service'
+include 'facade-service'
+
