@@ -1,32 +1,49 @@
 package com.yelyzaveta.logginservice;
 
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.map.IMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class LoggingController {
 
-    private final Map<String, String> messages = new HashMap<>();
+    private final HazelcastInstance hzInstance;
+
+
+    public LoggingController(HazelcastInstance hzInstance) {
+        this.hzInstance = hzInstance;
+    }
 
     @PostMapping("/save")
     public void saveMessage(@RequestBody Message message) {
-        messages.put(message.uuid, message.message);
-        System.out.println("Received and saved message: " + message.message);
+        IMap<UUID, String> messageMap = hzInstance.getMap("lab-messages");
+        messageMap.put(UUID.fromString(message.uuid), message.message);
+        System.out.println("Received message: " + message);
     }
 
     @GetMapping("/messages")
     public String getAllMessages() {
-        return String.join("\n", messages.values());
+        List<String> messages = hzInstance.getMap("lab-messages")
+                .values()
+                .stream()
+                .map(String::valueOf)
+                .toList();
+        return String.join("\n", messages);
     }
 
     static class Message {
         public String uuid;
         public String message;
+
+        @Override
+        public String toString() {
+            return uuid + " " + message;
+        }
     }
 }

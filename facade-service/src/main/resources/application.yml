@@ -1,2 +1,8 @@
 server:
-  port: 8080
+  port: 8081
+
+logging-service:
+  target-ports:
+    - 8083
+    - 8084
+    - 8085
