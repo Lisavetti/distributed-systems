@@ -1,2 +1,32 @@
 server:
-  port: 8080
+  port: 8081
+
+logging-service:
+  target-ports:
+    - 8083
+    - 8084
+    - 8085
+
+messaging-service:
+  target-ports:
+    - 8082
+    - 8088
+
+spring:
+  cloud:
+    stream:
+      bindings:
+        messages-out-0:
+          producer:
+            partition-count: 10
+            partition-key-expression: headers['partitionKey']
+          destination: messages
+          content-type: text/plain
+          group: messages_group
+      kafka:
+        default:
+          producer:
+            sync: true
+        binder:
+          autoAddPartitions: true
+          brokers: localhost:9093
