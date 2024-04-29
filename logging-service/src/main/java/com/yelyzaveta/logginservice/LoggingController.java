@@ -1,5 +1,6 @@
 package com.yelyzaveta.logginservice;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,17 +15,26 @@ import java.util.UUID;
 public class LoggingController {
 
     private final HazelcastInstance hzInstance;
+    private final IMap<UUID, String> messageMap;
+    private final ObjectMapper objectMapper;
 
 
-    public LoggingController(HazelcastInstance hzInstance) {
+    public LoggingController(HazelcastInstance hzInstance,
+                             ObjectMapper objectMapper) {
         this.hzInstance = hzInstance;
+        this.messageMap = hzInstance.getMap("lab-messages");
+        this.objectMapper = objectMapper;
     }
 
     @PostMapping("/save")
-    public void saveMessage(@RequestBody Message message) {
-        IMap<UUID, String> messageMap = hzInstance.getMap("lab-messages");
-        messageMap.put(UUID.fromString(message.uuid), message.message);
-        System.out.println("Received message: " + message);
+    public void saveMessage(@RequestBody String messageBody) {
+        try {
+            Message message = objectMapper.readValue(messageBody, Message.class);
+            messageMap.put(UUID.fromString(message.uuid), message.message);
+            System.out.println("Received message: " + messageBody);
+        } catch (Exception e) {
+            System.out.println("Unable to deserialize message " + e);
+        }
     }
 
     @GetMapping("/messages")
