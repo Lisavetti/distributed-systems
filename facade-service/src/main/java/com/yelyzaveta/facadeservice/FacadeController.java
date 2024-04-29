@@ -43,8 +43,9 @@ public class FacadeController {
         int randomPort = ports.get(random.nextInt(ports.size()));
 
         String uuid = UUID.randomUUID().toString();
-        restTemplate.postForObject("http://localhost:" + randomPort + "/save", new Message(uuid, messageBody), Void.class);
-        messageStreamPublisher.publishMessage(messageBody);
+        Message message = new Message(uuid, messageBody);
+        restTemplate.postForObject("http://localhost:" + randomPort + "/save", message, Void.class);
+        messageStreamPublisher.publishMessage(message);
         return "Received message with ID: " + uuid;
     }
 

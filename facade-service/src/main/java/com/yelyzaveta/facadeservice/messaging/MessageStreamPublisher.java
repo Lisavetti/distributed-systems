@@ -1,5 +1,6 @@
 package com.yelyzaveta.facadeservice.messaging;
 
+import com.yelyzaveta.facadeservice.FacadeController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.stream.function.StreamBridge;
@@ -19,7 +20,7 @@ public class MessageStreamPublisher {
         this.protobufMimeType = new MimeType("text", "plain");
     }
 
-    public void publishMessage(String message) {
+    public void publishMessage(FacadeController.Message message) {
         try {
             send(message);
         } catch (Exception e) {
@@ -27,7 +28,7 @@ public class MessageStreamPublisher {
         }
     }
 
-    private void send(String message) {
+    private void send(FacadeController.Message message) {
         streamBridge.send("messages-out-0", MessageBuilder.withPayload(message)
                 .setHeader("partitionKey", message.hashCode() % 10)
                 .build(), protobufMimeType);

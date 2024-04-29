@@ -19,7 +19,7 @@ public class MessageStreamListener {
     }
 
     @Bean
-    public Consumer<String> messages() {
+    public Consumer<Message> messages() {
         return message -> {
             log.info("Got new message {}", message);
             messagesService.saveMessage(message);
