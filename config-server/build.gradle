@@ -4,7 +4,7 @@ plugins {
     id 'java'
 }
 
-group = 'com.yelyzaveta.loggingservice'
+group = 'com.yelyzaveta.configservier'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '21'
 
@@ -17,12 +17,9 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '4.1.1'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '4.1.1'
-
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-config-server', version: '4.1.1'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'com.hazelcast:hazelcast:5.3.7'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

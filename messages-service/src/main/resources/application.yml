@@ -1,2 +1,24 @@
 server:
   port: 8082
+
+spring:
+  application:
+    name: messages-service
+  cloud:
+    stream:
+      bindings:
+        messages-in-0:
+          consumer:
+            partitioned: true
+          destination: messages
+          group: messages_group
+          content-type: text/plain
+      kafka:
+        binder:
+          brokers: localhost:9093
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    enabled: true
