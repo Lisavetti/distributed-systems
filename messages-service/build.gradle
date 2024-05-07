@@ -17,6 +17,11 @@ repositories {
 }
 
 dependencies {
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-stream-binder-kafka', version: '4.1.1'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '4.1.1'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-stream', version: '4.1.1'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
